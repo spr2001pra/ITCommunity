@@ -2,6 +2,7 @@ package com.nowcoder.community.dao;
 
 import com.nowcoder.community.entity.DiscussPost;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ public interface DiscussPostMapper {
 
     List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit);
 
-    int selectDiscussPostRows(int userId);
+    // @Param注解用于给参数取别名，如果这个方法只有一个参数，且在<if>里使用，那就必须加别名
+    int selectDiscussPostRows(@Param("userId") int userId);
 
 }

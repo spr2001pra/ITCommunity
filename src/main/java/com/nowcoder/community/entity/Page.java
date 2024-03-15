@@ -64,7 +64,7 @@ public class Page {
         }
     }
 
-    //获取起始页码
+    //获取起始页码,不可能有100页就在页面底部显示100个页码，都是显示一小段
     public int getFrom(){
         int from = current - 2;
         return Math.max(from, 1);
