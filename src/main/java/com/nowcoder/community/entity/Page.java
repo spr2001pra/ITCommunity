@@ -5,10 +5,13 @@ public class Page {
 
     // 当前的页码
     private int current = 1;
+
     // 显示上限
     private int limit = 10;
+
     // 数据总数(用与计算总页数)
     private int rows;
+
     // 查询路径(复用分页链接)
     private String path;
 
