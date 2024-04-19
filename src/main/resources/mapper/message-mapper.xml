@@ -8,6 +8,10 @@
         id, from_id, to_id, conversation_id, content, status, create_time
     </sql>
 
+    <sql id="insertFields">
+        from_id, to_id, conversation_id, content, status, create_time
+    </sql>
+
     <select id="selectConversations" resultType="Message">
         select <include refid="selectFields"/>
         from message
@@ -60,5 +64,20 @@
             and conversation_id = #{conversationId}
         </if>
     </select>
+
+    <insert id="insertMessage" parameterType="Message" keyProperty="id">
+        /* keyProperty="id"，id字段在数据库中自增长，Mybatis自动回填 */
+        insert into message (<include refid="insertFields"/>)
+        values (#{fromId}, #{toId}, #{conversationId}, #{content}, #{status}, #{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update message
+        set status = #{status}
+        where id in /* in的语法是 in(字段, 字段……). 用foreach来拼接这样的语句 */
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>
