@@ -4,6 +4,7 @@ package com.nowcoder.community.controller;
 import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.service.LikeService;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.HostHolder;
@@ -132,6 +133,27 @@ public class UserController {
             return "/site/setting";
         }
         return "redirect:/index";
+    }
+
+    @Autowired
+    private LikeService likeService;
+
+    @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId, Model model){
+        User user = userService.findUserById(userId);
+
+        // 防止恶意攻击，如有人用一个错误的数据传入然后反复查找
+        if(user == null){
+            throw new RuntimeException("用户不存在");
+        }
+
+        // 用户
+        model.addAttribute("user", user);
+        // 点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+        return "/site/profile";
     }
 
 }
