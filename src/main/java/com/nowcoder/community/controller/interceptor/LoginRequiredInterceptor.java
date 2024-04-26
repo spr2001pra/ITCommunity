@@ -23,7 +23,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(handler instanceof HandlerMethod){ // 判断要拦截的对象是否是方法(HandlerMethod)
+        if(handler instanceof HandlerMethod){ // object是拦截的目标，判断要拦截的对象是否是方法(HandlerMethod)
             HandlerMethod handlerMethod = (HandlerMethod) handler; // 强制由object转换成HandlerMethod类型，便于处理
             Method method = handlerMethod.getMethod();// 调用该类型的getMethod()方法获取method对象
 
@@ -33,7 +33,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
             LoginRequired loginRequired = method.getAnnotation(LoginRequired.class); // 从方法对象上取方法的注解
             if(loginRequired != null && hostHolder.getUser() == null){ // loginRequired != null说明该方法需要登录才能访问
-                response.sendRedirect(request.getContextPath() + "/login"); // 因为是实现接口定义的方法，不能直接像Controller中return redirect，Controller中底层实际上也是这样写的
+                response.sendRedirect(request.getContextPath() + "/login"); // 因为是实现接口定义的方法，不能直接像Controller中return redirect，只能用respond对象重定向，Controller中底层实际上也是这样写的；重定向的路径除了本方法也可以通过配置文件传参数进来
                 return false; // 拒绝后续请求
             }
         }
