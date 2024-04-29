@@ -80,4 +80,46 @@
         </foreach>
     </update>
 
+    <select id="selectLatestNotice" resultType="Message">
+        select <include refid="selectFields"/>
+        from message
+        where id in (
+        select max(id) from message
+        where status != 2
+        and from_id = 1
+        and to_id = #{userId}
+        and conversation_id = #{topic}
+        )
+    </select>
+
+    <select id="selectNoticeCount" resultType="int">
+        select count(id) from message
+        where status != 2
+        and from_id = 1
+        and to_id = #{userId}
+          and conversation_id = #{topic}
+    </select>
+
+    <select id="selectNoticeUnreadCount" resultType="int">
+        select count(id) from message
+        where status = 0
+        and from_id = 1
+        and to_id = #{userId} /*if条件扩大改方法的适用范围，不传入topic则查找所有的未读通知*/
+        <if test="topic!=null">
+            and conversation_id = #{topic}
+        </if>
+    </select>
+
+    <select id="selectNotices" resultType="Message">
+        select <include refid="selectFields"/>
+        from message
+        where status != 2
+        and from_id = 1
+        and to_id = #{userId}
+        and conversation_id = #{topic}
+        order by create_time desc
+        limit #{offset}, #{limit} /*该方法调用一次就返回一个列表，里面包含limit条查找的数据*/
+    </select>
+
+
 </mapper>
