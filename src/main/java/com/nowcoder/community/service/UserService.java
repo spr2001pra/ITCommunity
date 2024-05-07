@@ -147,6 +147,7 @@ public class UserService implements CommunityConstant {
             return map;
         }
 
+        // 验证状态
         if(user.getStatus() == 0){
             map.put("usernameMsg", "该账号未激活！");
             return map;
